@@ -36,7 +36,7 @@ def main():
     astree = ast.parse(file);
     AstVisitor().generic_visit(astree)
 
-    onto.save('./onto.owl', format="rdfxml")
+    onto.save('./tree.owl', format="rdfxml")
 
 
 main()
