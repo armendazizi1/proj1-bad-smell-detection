@@ -46,12 +46,7 @@ def main():
     onto.save('./tree2.owl', format="rdfxml")
 
 
-
-
-
 main()
-
-
 
 # def unit_tests():
 #     onto2 = get_ontology("tree3.owl").load()
@@ -62,4 +57,13 @@ main()
 #     assert a.body[0].jname[0] == 'x'
 #     assert a.body[1].is_a[0].name == 'FieldDeclaration'
 #     assert a.body[1].jname[0] == 'y'
+#
 # unit_tests()
+
+
+
+
+
+
+
+

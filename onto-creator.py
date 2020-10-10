@@ -39,4 +39,16 @@ def main():
     onto.save('./tree.owl', format="rdfxml")
 
 
+
 main()
+
+
+def unit_tests():
+    onto = get_ontology("tree.owl").load()
+    cd = onto["ClassDeclaration"]
+    assert cd.name == "ClassDeclaration"
+    assert len(cd.is_a) == 1
+    assert cd.is_a[0].name == 'TypeDeclaration'
+
+
+unit_tests()
