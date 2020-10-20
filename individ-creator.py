@@ -84,7 +84,7 @@ def main():
     onto.save('./tree2.owl', format="rdfxml")
 
 
-# main()
+main()
 
 
 # @pytest.fixture
@@ -142,7 +142,7 @@ def unit_tests():
 
 
 
-unit_tests()
+# unit_tests()
 
 
 
