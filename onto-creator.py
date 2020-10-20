@@ -22,7 +22,7 @@ class AstVisitor(ast.NodeVisitor):
             elif (type(node) == ast.Assign):
                 for value in node.value.elts:
                     # print(value.s)
-                    if (value.s in ['parameter', 'body']):
+                    if (value.s in ['parameters', 'body']):
                         types.new_class(value.s, (ObjectProperty,))
                     else:
                         if value.s == 'name':
@@ -43,13 +43,13 @@ def main():
 main()
 
 
-def unit_tests():
-    onto = get_ontology("tree.owl").load()
-    cd = onto["ClassDeclaration"]
-
-    assert cd.name == "ClassDeclaration"
-    assert len(cd.is_a) == 1
-    assert cd.is_a[0].name == 'TypeDeclaration'
-
-
-unit_tests()
+# def unit_tests():
+#     onto = get_ontology("tree.owl").load()
+#     cd = onto["ClassDeclaration"]
+#
+#     assert cd.name == "ClassDeclaration"
+#     assert len(cd.is_a) == 1
+#     assert cd.is_a[0].name == 'TypeDeclaration'
+#
+#
+# unit_tests()

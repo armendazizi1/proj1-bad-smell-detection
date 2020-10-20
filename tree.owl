@@ -10,7 +10,7 @@
 
 <owl:ObjectProperty rdf:about="#body"/>
 
-<owl:ObjectProperty rdf:about="#parameter"/>
+<owl:ObjectProperty rdf:about="#parameters"/>
 
 <owl:DatatypeProperty rdf:about="#package"/>
 
@@ -56,8 +56,6 @@
 
 <owl:DatatypeProperty rdf:about="#return_type"/>
 
-<owl:DatatypeProperty rdf:about="#parameters"/>
-
 <owl:DatatypeProperty rdf:about="#throws"/>
 
 <owl:DatatypeProperty rdf:about="#declarators"/>
@@ -95,6 +93,8 @@
 <owl:DatatypeProperty rdf:about="#cases"/>
 
 <owl:DatatypeProperty rdf:about="#statements"/>
+
+<owl:DatatypeProperty rdf:about="#parameter"/>
 
 <owl:DatatypeProperty rdf:about="#case"/>
 
