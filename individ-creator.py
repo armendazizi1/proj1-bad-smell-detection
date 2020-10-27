@@ -12,24 +12,6 @@ def populateOntology(onto, tree):
         # print(node.body)
         cd = onto["ClassDeclaration"]()
         cd.jname = [node.name]
-
-        # for _, fields in tree.filter(javalang.tree.FieldDeclaration):
-        #     for field in fields.declarators:
-        #         fd = onto['FieldDeclaration']()
-        #         # print(field.name)
-        #         fd.jname = [field.name]
-        #         cd.body.append(fd)
-        #
-        # for _, constructor in tree.filter(javalang.tree.ConstructorDeclaration):
-        #     cod = onto['ConstructorDeclaration']()
-        #     cod.jname = [constructor.name]
-        #     cd.body.append(cod)
-        #
-        # for _, method in tree.filter(javalang.tree.MethodDeclaration):
-        #     md = onto['MethodDeclaration']()
-        #     md.jname = [method.name]
-        #     cd.body.append(md)
-
         # Got help from Gregory Wullimann here with his idea to populate the ontology in order, NOT SURE about this yet.
         for member in node.body:
             if (type(member)== javalang.tree.FieldDeclaration):
@@ -87,14 +69,15 @@ def main():
 main()
 
 
-# @pytest.fixture
-# def setup_ontology():
-#     onto = get_ontology("tree.owl").load()
-#     yield onto
-#     for e in onto['ClassDeclaration'].instances(): destroy_entity(e)
-
-def unit_tests():
+@pytest.fixture
+def setup_ontology():
     onto = get_ontology("tree.owl").load()
+    yield onto
+    for e in onto['ClassDeclaration'].instances(): destroy_entity(e)
+
+def test_unit(setup_ontology):
+    # onto = get_ontology("tree.owl").load()
+    onto = setup_ontology
     tree = javalang.parse.parse("class A { int x, y; public A(){} public A(int a, int b){} void m(){} void m2(int k, int j){if(true){} while(false){} return; } }")
     populateOntology(onto, tree)
     a = onto['ClassDeclaration'].instances()[0]
