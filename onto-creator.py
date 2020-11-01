@@ -1,6 +1,7 @@
 import ast
 from owlready2 import *
 import types
+import pytest
 
 onto = get_ontology("http://test.org/onto.owl")
 
@@ -42,14 +43,19 @@ def main():
 
 main()
 
+@pytest.fixture
+def setup_ontology():
+    onto = get_ontology("tree.owl").load()
+    yield onto
+    for e in onto['ClassDeclaration'].instances(): destroy_entity(e)
 
-# def unit_tests():
-#     onto = get_ontology("tree.owl").load()
-#     cd = onto["ClassDeclaration"]
-#
-#     assert cd.name == "ClassDeclaration"
-#     assert len(cd.is_a) == 1
-#     assert cd.is_a[0].name == 'TypeDeclaration'
-#
-#
-# unit_tests()
+def test_unit(setup_ontology):
+    onto = setup_ontology
+    cd = onto["ClassDeclaration"]
+
+    assert cd.name == "ClassDeclaration"
+    assert len(cd.is_a) == 1
+    assert cd.is_a[0].name == 'TypeDeclaration'
+
+
+

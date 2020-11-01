@@ -12,7 +12,7 @@ def populateOntology(onto, tree):
         # print(node.body)
         cd = onto["ClassDeclaration"]()
         cd.jname = [node.name]
-        # Got help from Gregory Wullimann here with his idea to populate the ontology in order, NOT SURE about this yet.
+        # Got help from Gregory Wullimann here with his idea to populate the ontology in order.
         for member in node.body:
             if (type(member)== javalang.tree.FieldDeclaration):
                 for field in member.declarators:
@@ -66,8 +66,8 @@ def main():
     onto.save('./tree2.owl', format="rdfxml")
 
 
-main()
 
+main()
 
 @pytest.fixture
 def setup_ontology():
@@ -124,8 +124,6 @@ def test_unit(setup_ontology):
 
 
 
-
-# unit_tests()
 
 
 

@@ -1,0 +1,72 @@
+	 Long Methods 	 
+-------------------------------------------------- 
+Class              Method             #Statements       
+-------------------------------------------------- 
+GameControl        getDate            26                
+GameControl        requestMove        76                
+ChessPuzzleProvider insert             20                
+PGNProvider        insert             31                
+GameControl        loadPGNMoves       97                
+JNI                newGame            35                
+ChessPuzzleProvider query              25                
+JNI                initRandomFisher   87                
+GameControl        loadPGNHead        26                
+JNI                initFEN            88                
+
+
+ 	 Long Constructors 	 
+-------------------------------------------------- 
+Class              Constructor        #Statements       
+-------------------------------------------------- 
+
+
+ 	 Long Classes 	 
+-------------------------------------------------- 
+Class              #Methods          
+-------------------------------------------------- 
+JNI                44                
+Move               21                
+GameControl        63                
+
+
+ 	 Methods with switch statement 	 
+-------------------------------------------------- 
+Class              Method             #SwitchStatements  
+-------------------------------------------------- 
+ChessPuzzleProvider update             1                 
+PGNProvider        getType            1                 
+ChessPuzzleProvider delete             1                 
+PGNProvider        query              1                 
+PGNProvider        update             1                 
+PGNProvider        delete             1                 
+ChessPuzzleProvider query              1                 
+ChessPuzzleProvider getType            1                 
+
+
+ 	 Constructors with switch statement 	 
+-------------------------------------------------- 
+Class              Constructor        #SwitchStatements  
+-------------------------------------------------- 
+
+
+ 	 Methods with many Parameters 	 
+-------------------------------------------------- 
+Class              Method             #Paramteres        
+-------------------------------------------------- 
+JNI                setCastlingsEPAnd50 6                 
+GameControl        addPGNEntry        5                 
+PGNProvider        query              5                 
+ChessPuzzleProvider query              5                 
+
+
+ 	 Constructors with many Parameters 	 
+-------------------------------------------------- 
+Class              Constructor        #Paramteres        
+-------------------------------------------------- 
+
+
+ 	 Data Classes 	 
+-------------------------------------------------- 
+Class              #methods           #gettersSetters    
+-------------------------------------------------- 
+Valuation          1                  1                 
