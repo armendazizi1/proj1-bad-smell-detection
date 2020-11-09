@@ -202,149 +202,6 @@ def findConstructorsWithSwitch(g):
     return constructors
 
 
-
-
-@pytest.fixture
-def setup_ontology():
-    onto = get_ontology("tree.owl").load()
-    yield onto
-    for e in onto['ClassDeclaration'].instances(): destroy_entity(e)
-
-def test_method(setup_ontology):
-    onto = setup_ontology
-    tree = javalang.parse.parse("class A { int f(int x) { x++;x++;x++;x++;x++;x++;x++;x++;x++;x++;x++;x++;x++;x++;x++;x++;x++;x++;x++;x++;x++; } }")
-    populateOntology(onto, tree)
-    onto.save(file="tmp.owl", format="rdfxml")
-    g = rdflib.Graph()
-    g.load("tmp.owl")
-
-    methods = findLongMethods(g)
-    assert len(methods) == 1
-    for row in methods:
-        assert(row.cn.value == 'A')
-        assert (row.mn.value == 'f')
-        assert (row.tot.value == 21)
-
-def test_data_class(setup_ontology):
-    onto = setup_ontology
-    tree = javalang.parse.parse("class A { int setNum(int x) { } int getNum(){} int getNum2(){} }")
-    populateOntology(onto, tree)
-    onto.save(file="tmp.owl", format="rdfxml")
-    g = rdflib.Graph()
-    g.load("tmp.owl")
-
-    dataclasses = findClassesWithOnlyGettersAndSetters(g)
-    normalclasses = findAllMethods(g)
-    assert len(dataclasses) == len(normalclasses)
-    for row in dataclasses:
-        for row2 in normalclasses:
-            assert (row.cn.value == row2.cn.value)
-            assert (row.tot.value == row2.tot.value)
-
-
-
-
-def test_method_with_many_parameters(setup_ontology):
-    onto = setup_ontology
-    tree = javalang.parse.parse("class A { int f2(int a, int b, int c, int d, int e, int f){} int f3(){}}")
-    populateOntology(onto, tree)
-    onto.save(file="tmp.owl", format="rdfxml")
-    g = rdflib.Graph()
-    g.load("tmp.owl")
-
-    methods = findMethodWithManyParameters(g)
-    assert len(methods) == 1
-    index = True
-    for row in methods:
-        assert (row.mn.value == 'f2')
-        assert (row.tot.value == 6)
-
-
-
-def test_construcotr_with_many_parameters(setup_ontology):
-    onto = setup_ontology
-    tree = javalang.parse.parse("class A { public A(int a, int b, int c, int d, int e, int g) { }  int f2(int a, int b, int c, int d, int e, int f){} int f3(){}}")
-    populateOntology(onto, tree)
-    onto.save(file="tmp.owl", format="rdfxml")
-    g = rdflib.Graph()
-    g.load("tmp.owl")
-
-    constructors = findConstructorWithManyParameters(g)
-    assert len(constructors) == 1
-    for row in constructors:
-        assert (row.constr.value == 'A')
-        assert (row.tot.value == 6)
-
-
-def test_method_with_switch(setup_ontology):
-    onto = setup_ontology
-    tree = javalang.parse.parse("class A { int f2(int "
-                                "x) { switch(expression) { case x: break; default: }  switch(expression) { case x: "
-                                "break; default: } switch(expression) { case x: break; default: }}  int f3(){} }")
-    populateOntology(onto, tree)
-    onto.save(file="tmp.owl", format="rdfxml")
-    g = rdflib.Graph()
-    g.load("tmp.owl")
-
-    methods = findMethodsWithSwitch(g)
-    assert len(methods) == 1
-    # index = True
-    for row in methods:
-        assert (row.mn.value == 'f2')
-        assert (row.tot.value == 3)
-
-
-def test_constructor_with_switch(setup_ontology):
-    onto = setup_ontology
-    tree = javalang.parse.parse("class A { public A (int x) { switch(expression) { case x: break; default: } } int f2(int "
-                                "x) { switch(expression) { case x: break; default: }  switch(expression) { case x: "
-                                "break; default: } switch(expression) { case x: break; default: }}  int f3(){} }")
-    populateOntology(onto, tree)
-    onto.save(file="tmp.owl", format="rdfxml")
-    g = rdflib.Graph()
-    g.load("tmp.owl")
-
-    constructors = findConstructorsWithSwitch(g)
-    assert len(constructors) == 1
-    for row in constructors:
-        assert (row.mn.value == 'A')
-        assert (row.tot.value == 1)
-
-
-
-def test_constructor(setup_ontology):
-    onto = setup_ontology
-    tree = javalang.parse.parse("class A { public A (int x) { x++;x++;x++;x++;x++;x++;x++;x++;x++;x++;x++;x++;x++;x++;x++;x++;x++;x++;x++;x++;x++;x++; } }")
-    populateOntology(onto, tree)
-    onto.save(file="tmp.owl", format="rdfxml")
-    g = rdflib.Graph()
-    g.load("tmp.owl")
-
-    constructors = findLongConstructors(g)
-    assert len(constructors) == 1
-    for row in constructors:
-        assert(row.cn.value == 'A')
-        assert (row.mn.value == 'A')
-        assert (row.tot.value == 22)
-
-
-def test_classes(setup_ontology):
-    onto = setup_ontology
-    tree = javalang.parse.parse("class A { void a(){} void b(){} void c(){} void d(){} void e(){} void f(){} void g(){} void h(){} void i(){} void j(){} void k(){}  void l(){}}")
-    populateOntology(onto, tree)
-    onto.save(file="tmp.owl", format="rdfxml")
-    g = rdflib.Graph()
-    g.load("tmp.owl")
-
-    classes = findLargeClasses(g)
-    assert len(classes) == 1
-    for row in classes:
-        assert(row.cn.value == 'A')
-        assert (row.tot.value == 12)
-
-
-
-
 def main():
     g = rdflib.Graph()
     g.load("tree2.owl")
@@ -413,9 +270,7 @@ def main():
     file.write('-------------------------------------------------- \n')
     file.write("{: <18} {: <18} {: <18} \n".format("Class", "Constructor", "#Paramteres"))
     file.write('-------------------------------------------------- \n')
-    # print(len(constructorsWithManyParemeters))
     for row in constructorsWithManyParemeters:
-        # print(row.cn)
         file.write("{: <18} {: <18} {: <18}\n".format(row.cn, row.constr, row.tot))
 
 
@@ -427,7 +282,6 @@ def main():
     file.write('-------------------------------------------------- \n')
     file.write("{: <18} {: <18} {: <18} \n".format("Class", "#methods", "#gettersSetters"))
     file.write('-------------------------------------------------- \n')
-    # print(len(dataClasses))
     for row in dataClasses:
         for row2 in allClasses:
             if row.cn.value == row2.cn.value:
@@ -436,4 +290,152 @@ def main():
 
     file.close()
 
-main()
+if __name__ == "__main__":
+    main()
+
+
+
+##################################
+#       TESTING
+##################################
+
+
+@pytest.fixture
+def setup_ontology():
+    onto = get_ontology("tree.owl").load()
+    yield onto
+    for e in onto['ClassDeclaration'].instances(): destroy_entity(e)
+
+def test_method(setup_ontology):
+    onto = setup_ontology
+    tree = javalang.parse.parse("class A { int f(int x) { x++;x++;x++;x++;x++;x++;x++;x++;x++;x++;x++;x++;x++;x++;x++;x++;x++;x++;x++;x++;x++; } }")
+    populateOntology(onto, tree)
+    onto.save(file="tmp.owl", format="rdfxml")
+    g = rdflib.Graph()
+    g.load("tmp.owl")
+
+    methods = findLongMethods(g)
+    assert len(methods) == 1
+    for row in methods:
+        assert(row.cn.value == 'A')
+        assert (row.mn.value == 'f')
+        assert (row.tot.value == 21)
+
+def test_data_class(setup_ontology):
+    onto = setup_ontology
+    tree = javalang.parse.parse("class A { int setNum(int x) { } int getNum(){} int getNum2(){} }")
+    populateOntology(onto, tree)
+    onto.save(file="tmp.owl", format="rdfxml")
+    g = rdflib.Graph()
+    g.load("tmp.owl")
+
+    dataclasses = findClassesWithOnlyGettersAndSetters(g)
+    normalclasses = findAllMethods(g)
+    assert len(dataclasses) == len(normalclasses)
+    for row in dataclasses:
+        for row2 in normalclasses:
+            assert (row.cn.value == row2.cn.value)
+            assert (row.tot.value == row2.tot.value)
+
+
+
+
+def test_method_with_many_parameters(setup_ontology):
+    onto = setup_ontology
+    tree = javalang.parse.parse("class A { int f2(int a, int b, int c, int d, int e, int f){} int f3(){}}")
+    populateOntology(onto, tree)
+    onto.save(file="tmp.owl", format="rdfxml")
+    g = rdflib.Graph()
+    g.load("tmp.owl")
+
+    methods = findMethodWithManyParameters(g)
+    assert len(methods) == 1
+    for row in methods:
+        assert (row.mn.value == 'f2')
+        assert (row.tot.value == 6)
+
+
+
+def test_construcotr_with_many_parameters(setup_ontology):
+    onto = setup_ontology
+    tree = javalang.parse.parse("class A { public A(int a, int b, int c, int d, int e, int g) { }  int f2(int a, int b, int c, int d, int e, int f){} int f3(){}}")
+    populateOntology(onto, tree)
+    onto.save(file="tmp.owl", format="rdfxml")
+    g = rdflib.Graph()
+    g.load("tmp.owl")
+
+    constructors = findConstructorWithManyParameters(g)
+    assert len(constructors) == 1
+    for row in constructors:
+        assert (row.constr.value == 'A')
+        assert (row.tot.value == 6)
+
+
+def test_method_with_switch(setup_ontology):
+    onto = setup_ontology
+    tree = javalang.parse.parse("class A { int f2(int "
+                                "x) { switch(expression) { case x: break; default: }  switch(expression) { case x: "
+                                "break; default: } switch(expression) { case x: break; default: }}  int f3(){} }")
+    populateOntology(onto, tree)
+    onto.save(file="tmp.owl", format="rdfxml")
+    g = rdflib.Graph()
+    g.load("tmp.owl")
+
+    methods = findMethodsWithSwitch(g)
+    assert len(methods) == 1
+    for row in methods:
+        assert (row.mn.value == 'f2')
+        assert (row.tot.value == 3)
+
+
+def test_constructor_with_switch(setup_ontology):
+    onto = setup_ontology
+    tree = javalang.parse.parse("class A { public A (int x) { switch(expression) { case x: break; default: } } int f2(int "
+                                "x) { switch(expression) { case x: break; default: }  switch(expression) { case x: "
+                                "break; default: } switch(expression) { case x: break; default: }}  int f3(){} }")
+    populateOntology(onto, tree)
+    onto.save(file="tmp.owl", format="rdfxml")
+    g = rdflib.Graph()
+    g.load("tmp.owl")
+
+    constructors = findConstructorsWithSwitch(g)
+    assert len(constructors) == 1
+    for row in constructors:
+        assert (row.mn.value == 'A')
+        assert (row.tot.value == 1)
+
+
+
+def test_constructor(setup_ontology):
+    onto = setup_ontology
+    tree = javalang.parse.parse("class A { public A (int x) { x++;x++;x++;x++;x++;x++;x++;x++;x++;x++;x++;x++;x++;x++;x++;x++;x++;x++;x++;x++;x++;x++; } }")
+    populateOntology(onto, tree)
+    onto.save(file="tmp.owl", format="rdfxml")
+    g = rdflib.Graph()
+    g.load("tmp.owl")
+
+    constructors = findLongConstructors(g)
+    assert len(constructors) == 1
+    for row in constructors:
+        assert(row.cn.value == 'A')
+        assert (row.mn.value == 'A')
+        assert (row.tot.value == 22)
+
+
+def test_classes(setup_ontology):
+    onto = setup_ontology
+    tree = javalang.parse.parse("class A { void a(){} void b(){} void c(){} void d(){} void e(){} void f(){} void g(){} void h(){} void i(){} void j(){} void k(){}  void l(){}}")
+    populateOntology(onto, tree)
+    onto.save(file="tmp.owl", format="rdfxml")
+    g = rdflib.Graph()
+    g.load("tmp.owl")
+
+    classes = findLargeClasses(g)
+    assert len(classes) == 1
+    for row in classes:
+        assert(row.cn.value == 'A')
+        assert (row.tot.value == 12)
+
+
+
+
